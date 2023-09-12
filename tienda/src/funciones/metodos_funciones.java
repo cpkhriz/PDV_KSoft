@@ -31,7 +31,7 @@ public class metodos_funciones {
         
         try {
             
-            String consulta="SELECT * FROM categoria";
+            String consulta="SELECT * FROM bd_categoria";
             st = con.createStatement();
             rs=st.executeQuery(consulta);
             
@@ -43,8 +43,8 @@ public class metodos_funciones {
             
             while (rs.next()){
                 categoria cate = new categoria();
-                cate.setIdcategoria(rs.getInt("idcategoria"));
-                cate.setNombre(rs.getString("nombre"));
+                cate.setIdcategoria(rs.getInt("id_categoria"));
+                cate.setNombre(rs.getString("nombre_categoria"));
                 
                 lista_categoria.add(cate);
             

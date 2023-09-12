@@ -10,9 +10,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import static javax.management.Query.value;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -33,6 +37,7 @@ public class productos extends javax.swing.JFrame {
         cargarTabla();
         this.setLocationRelativeTo(null);
         MostrarCategoria();
+       // cargarCombo(combocategoria);
     }
 
     @SuppressWarnings("unchecked")
@@ -354,12 +359,18 @@ public class productos extends javax.swing.JFrame {
         try {
             Connection con = conexion.getConexion();
             PreparedStatement ps;
-            ps = con.prepareStatement("INSERT INTO productos (codigo, nombre, precio, stock, marca) VALUES (?,?,?,?,?)");
+            ps = con.prepareStatement("INSERT INTO bd_producto ( codigo, id_categoria, nombre, precio, stock, marca) VALUES (?,?,?,?,?,?)");            
+            /*String value = combocategoria.getSelectedItem().toString();
+            ps.setString(2, value);*/
+            //ps.setInt(2, Integer.parseInt(combocategoria.getSelectedItem().toString()));
+            ps.setString(2, combocategoria.getSelectedItem().toString());
             ps.setString(1, txtCodigo.getText());
-            ps.setString(2, txtNombre.getText());
-            ps.setDouble(3, Double.parseDouble(txtPrecio.getText()));
-            ps.setInt(4, Integer.parseInt(txtStock.getText()));
-            ps.setString(5, txtMarca.getText());
+            ps.setString(3, txtNombre.getText());
+            ps.setDouble(4, Double.parseDouble(txtPrecio.getText()));
+            ps.setInt(5, Integer.parseInt(txtStock.getText()));
+            ps.setString(6, txtMarca.getText());
+            
+            
             
 
             int resultado = ps.executeUpdate();
@@ -371,6 +382,7 @@ public class productos extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(null, "Error al guardar producto");
             }
+            
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.toString());
@@ -385,7 +397,7 @@ public class productos extends javax.swing.JFrame {
 
             Connection con = conexion.getConexion();
             PreparedStatement ps;
-            ps = con.prepareStatement("SELECT id, codigo, nombre, precio, stock, marca FROM productos WHERE id=?");
+            ps = con.prepareStatement("SELECT id, codigo, nombre, precio, stock, marca FROM bd_producto WHERE id=?");
             ps.setInt(1, id);
             ResultSet resultado = ps.executeQuery();
 
@@ -396,18 +408,20 @@ public class productos extends javax.swing.JFrame {
                 txtPrecio.setText(resultado.getString("precio"));
                 txtStock.setText(resultado.getString("stock"));
                 txtMarca.setText(resultado.getString("marca"));
+                
             }
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.toString());
         }
+        
     }//GEN-LAST:event_jTableProductosMouseClicked
 
     private void btneditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneditarActionPerformed
         try {
             Connection con = conexion.getConexion();
             PreparedStatement ps;
-            ps = con.prepareStatement("UPDATE productos SET codigo=?, nombre=?, precio=?, stock=?, marca=? WHERE id=?");
+            ps = con.prepareStatement("UPDATE bd_producto SET codigo=?, nombre=?, precio=?, stock=?, marca=? WHERE id=?");
             ps.setString(1, txtCodigo.getText());
             ps.setString(2, txtNombre.getText());
             ps.setDouble(3, Double.parseDouble(txtPrecio.getText()));
@@ -438,7 +452,7 @@ public class productos extends javax.swing.JFrame {
         try {
             Connection con = conexion.getConexion();
             PreparedStatement ps;
-            ps = con.prepareStatement("DELETE FROM productos WHERE id=?");
+            ps = con.prepareStatement("DELETE FROM bd_producto WHERE id=?");
             ps.setInt(1, Integer.parseInt(txtId.getText()));
 
             int resultado = ps.executeUpdate();
@@ -533,7 +547,7 @@ public class productos extends javax.swing.JFrame {
 
             Connection con = conexion.getConexion();
             PreparedStatement ps;
-            ps = con.prepareStatement("SELECT id, codigo, nombre, stock, marca FROM productos");
+            ps = con.prepareStatement("SELECT id, codigo, nombre, stock, marca FROM bd_producto");
             ResultSet resultado = ps.executeQuery();
             ResultSetMetaData rsmta = resultado.getMetaData();
 
@@ -634,13 +648,42 @@ public class productos extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     public void MostrarCategoria(){
-        metodos_funciones funcion = new metodos_funciones();
+       metodos_funciones funcion = new metodos_funciones();
         
         ArrayList<categoria> lista = funcion.ObtenerCategoria();
-                combocategoria.addItem("Seleccionar");
+               combocategoria.addItem("Seleccionar");
         for (int i = 0; i < lista.size(); i++) {
-            combocategoria.addItem(lista.get(i).toString());
+           combocategoria.addItem(lista.get(i).toString());
         }
     }
+
+    /*private void cargarCombo(JComboBox c) {
+        DefaultComboBoxModel combo = new DefaultComboBoxModel();
+        c.setModel(combo);
+        listado_categorias lc = new listado_categorias();
+        
+        try {
+            
+            Connection con = conexion.getConexion();
+            PreparedStatement ps;
+            ps = con.prepareStatement("SELECT nombre FROM bd_categoria");
+            ResultSet rs = ps.executeQuery();
+            ResultSetMetaData rsmta = rs.getMetaData();
+            //Statement st = conexion.createStatement();
+            //ResultSet rs = st.executeQuery("SELECT nombre FROM categoria");
+            
+            while(rs.next()){
+                categoria cate = new categoria();
+                
+                cate.setNombre(rs.getString(1));
+                lc.agregar_categoria(cate);
+                combo.addElement(cate.getNombre());
+            }
+        } catch (Exception e) {
+            
+            JOptionPane.showMessageDialog(null, "Inserte categoria");
+        }
+
+}*/
 
 }

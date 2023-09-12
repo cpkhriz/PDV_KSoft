@@ -14,22 +14,22 @@ public class categoria {
     }
 
     
-    private int idcategoria;
+    private int id_categoria;
     private String nombre;
     
 
 
  public categoria(int idcategoria, String nombre) {
-        this.idcategoria = idcategoria;
+        this.id_categoria = idcategoria;
         this.nombre = nombre;
     }
  
  public int getIdcategoria() {
-        return idcategoria;
+        return id_categoria;
     }
 
-    public void setIdcategoria(int idcategoria) {
-        this.idcategoria = idcategoria;
+    public void setIdcategoria(int id_categoria) {
+        this.id_categoria = id_categoria;
     }
 
     public String getNombre() {
@@ -40,10 +40,10 @@ public class categoria {
         this.nombre = nombre;
     }
 
-    @Override
-    public String toString() {
+  @Override
+   public String toString() {
         return nombre;
     }
-
+   
     
 }
